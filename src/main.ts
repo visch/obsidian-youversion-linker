@@ -7,6 +7,7 @@ import GenerateLinks from './GenerateLinks';
 import linkPreview from './preview/LinkPreviewReader';
 import { linkPreviewPlugin } from './preview/LinkPreviewEditor';
 import { migrateSettings } from './settings/SettingsMigrations';
+import BooksModal from './books/BooksModal';
 
 export default class ObsidianYouversionLinker extends Plugin {
   settings: ObsidianYouversionLinkerSettings = DEFAULT_SETTINGS;
@@ -25,9 +26,18 @@ export default class ObsidianYouversionLinker extends Plugin {
       editorCallback: (editor: Editor, view: MarkdownView | MarkdownFileInfo) =>
         GenerateLinks(editor, view, this.settings),
     });
+    this.addCommand({
+      id: 'show-book-abbreviations',
+      name: 'Show book names and abbreviations',
+      callback: () => this.openBooksModal(),
+    });
   }
 
   onunload() {}
+
+  openBooksModal() {
+    new BooksModal(this.app, this.settings.selectedBooksLanguages).open();
+  }
 
   async loadSettings() {
     const loaded = (await this.loadData()) as Partial<ObsidianYouversionLinkerSettings>;

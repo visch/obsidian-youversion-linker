@@ -271,6 +271,12 @@ export default class SettingTab extends PluginSettingTab {
       .setDesc('Select languages of books names and abbreviations to be used in autocomplete.')
       .addButton((button) => {
         button
+          .setIcon('list')
+          .setTooltip('Show book names and abbreviations')
+          .onClick(() => this.plugin.openBooksModal());
+      })
+      .addButton((button) => {
+        button
           .setIcon('plus')
           .setTooltip('Add language of books names')
           .onClick(async () => {
