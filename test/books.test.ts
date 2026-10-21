@@ -1,6 +1,10 @@
 import { booksNames } from '../src/books/BooksLists';
 import { testBookRegex } from '../src/Regex';
-import { cleanBookName } from '../src/books/Books';
+import { cleanBookName, findBook } from '../src/books/Books';
+import {
+  DEFAULT_SETTINGS,
+  type ObsidianYouversionLinkerSettings,
+} from '../src/settings/SettingsData';
 import { describe, expect, test } from '@jest/globals';
 import { ALL_BOOKS, BASE_BOOKS } from '../src/books/BooksType';
 
@@ -31,4 +35,28 @@ describe('Book names', () => {
       }
     },
   );
+});
+
+describe('Find book', () => {
+  const settings: ObsidianYouversionLinkerSettings = {
+    ...DEFAULT_SETTINGS,
+    selectedBooksLanguages: ['English', 'Korean'],
+  };
+
+  test.each([
+    ['john 3:16', 'john', 'JHN'],
+    ['john3:16', 'john', 'JHN'],
+    ['gen1:1', 'gen', 'GEN'],
+    ['ps23', 'ps', 'PSA'],
+    ['1 john1:9', '1 john', '1JN'],
+    ['1cor13', '1cor', '1CO'],
+    ['song2:1', 'song', 'SNG'],
+    ['요1 1:9', '요1', '1JN'],
+  ])('finds book in "%s"', (query, book, code) => {
+    expect(findBook(query, settings)).toStrictEqual({ book, books: [code] });
+  });
+
+  test('returns no books for unknown book', () => {
+    expect(findBook('xyz3:16', settings)?.books).toStrictEqual([]);
+  });
 });

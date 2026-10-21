@@ -1,5 +1,5 @@
-import getBooks from './books/Books';
-import { bookRegex, linkRegex, chapterSeparatorRegex, rangeSeparatorRegex } from './Regex';
+import { findBook } from './books/Books';
+import { linkRegex, chapterSeparatorRegex, rangeSeparatorRegex } from './Regex';
 import { ObsidianYouversionLinkerSettings } from './settings/SettingsData';
 import Verse, { VerseElement } from './verses/Verse';
 import VerseLink from './verses/VerseLink';
@@ -128,13 +128,13 @@ export function getSuggestionsFromQuery(
 ): Verse[] {
   console.debug('get suggestion for query ', query.toLowerCase());
 
-  const book = query.match(bookRegex)?.first();
-  if (!book) {
+  const found = findBook(query, settings);
+  if (!found) {
     console.error(`could not find through query`, query);
     return [];
   }
 
-  const booksUrl = getBooks(book, settings);
+  const { book, books: booksUrl } = found;
   if (!booksUrl.length) {
     console.error(`could not find book url`, book);
     return [];
