@@ -1,6 +1,10 @@
 import { booksNames } from '../src/books/BooksLists';
 import { testBookRegex } from '../src/Regex';
-import { cleanBookName } from '../src/books/Books';
+import getBooks, { cleanBookName } from '../src/books/Books';
+import {
+  DEFAULT_SETTINGS,
+  type ObsidianYouversionLinkerSettings,
+} from '../src/settings/SettingsData';
 import { describe, expect, test } from '@jest/globals';
 import { ALL_BOOKS, BASE_BOOKS } from '../src/books/BooksType';
 
@@ -31,4 +35,23 @@ describe('Book names', () => {
       }
     },
   );
+});
+
+describe('English names', () => {
+  const settings: ObsidianYouversionLinkerSettings = {
+    ...DEFAULT_SETTINGS,
+    selectedBooksLanguages: ['English'],
+  };
+
+  test.each([
+    ['ex', 'EXO'],
+    ['Ro', 'ROM'],
+    ['Isiah', 'ISA'],
+    ['Mathew', 'MAT'],
+    ['first kings', '1KI'],
+    ['Second Timothy', '2TI'],
+    ['third john', '3JN'],
+  ])('"%s" is %s', (name, code) => {
+    expect(getBooks(name, settings)).toStrictEqual([code]);
+  });
 });
