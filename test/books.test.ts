@@ -45,6 +45,9 @@ describe('English names', () => {
 
   test.each([
     ['ex', 'EXO'],
+    ['Pr', 'PRO'],
+    ['Ps', 'PSA'],
+    ['Psalms', 'PSA'],
     ['Ro', 'ROM'],
     ['Isiah', 'ISA'],
     ['Mathew', 'MAT'],
